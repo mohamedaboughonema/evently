@@ -1,12 +1,15 @@
 import 'package:evently/custom_widgets/special_dropdown_menu.dart';
 import 'package:evently/custom_widgets/special_elevated_button.dart';
+import 'package:evently/provider/events_list_provider.dart';
 import 'package:evently/provider/language_provider.dart';
 import 'package:evently/provider/theme_provider.dart';
+import 'package:evently/provider/user_provider.dart';
+import 'package:evently/ui/auth/login/login_screen.dart';
 import 'package:evently/utils/app_color.dart';
 import 'package:evently/utils/app_text_style.dart';
 import 'package:evently/utils/asset_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:evently/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class ProfileTab extends StatelessWidget {
@@ -16,8 +19,11 @@ class ProfileTab extends StatelessWidget {
   Widget build(BuildContext context) {
     var providerLanguage = Provider.of<AppLanguageProvider>(context);
     var providerTheme = Provider.of<AppThemeProvider>(context);
+    var eventsListProvider = Provider.of<EventsListProvider>(context);
+    var userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: AppColor.primaryBlue,
           toolbarHeight: 160,
           shape: RoundedRectangleBorder(
@@ -33,11 +39,13 @@ class ProfileTab extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Mohamed Omar Mahrous Saad Aboughonema',
+                      userProvider.currentUser!.name ??
+                          'nullable which is impossible',
                       style: AppTextStyle.bold24White,
                     ),
                     Text(
-                      'mohamedomarmahroussaadaboughonema@route.com',
+                      userProvider.currentUser!.email ??
+                          'nullable which is impossible',
                       style: AppTextStyle.medium16White,
                     )
                   ],
@@ -89,7 +97,11 @@ class ProfileTab extends StatelessWidget {
                 code2: ThemeMode.dark.toString()),
             Spacer(),
             SpecialElevatedButton(
-              onPressed: logout,
+              onPressed: () {
+                eventsListProvider.filteredList = [];
+                Navigator.of(context)
+                    .pushReplacementNamed(LoginScreen.routeName);
+              },
               text: AppLocalizations.of(context)!.logout,
               icon: Icon(Icons.logout, color: AppColor.white, size: 20),
               backgroundColor: AppColor.red,

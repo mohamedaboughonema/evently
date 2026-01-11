@@ -1,21 +1,27 @@
+import 'package:evently/model/event.dart';
+import 'package:evently/provider/events_list_provider.dart';
+import 'package:evently/provider/user_provider.dart';
 import 'package:evently/utils/app_color.dart';
 import 'package:evently/utils/app_text_style.dart';
-import 'package:evently/utils/asset_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class EventWidget extends StatelessWidget {
-  final bool isFavourite;
-  const EventWidget({super.key, required this.isFavourite});
+  final Event event;
+  const EventWidget({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {
+    var eventsListProvider = Provider.of<EventsListProvider>(context);
+    var userProvider = Provider.of<UserProvider>(context);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       padding: EdgeInsets.all(10),
       height: 220,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(AssetsManager.birthdayImage),
+          image: AssetImage(event.image!),
           fit: BoxFit.fill,
         ),
         borderRadius: BorderRadius.circular(12),
@@ -34,11 +40,11 @@ class EventWidget extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '21',
+                  event.date!.day.toString(),
                   style: AppTextStyle.bold20Primary,
                 ),
                 Text(
-                  'Dec',
+                  DateFormat('MMM').format(event.date!),
                   style: AppTextStyle.bold14Primary,
                 ),
               ],
@@ -54,15 +60,23 @@ class EventWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Description',
+                    event.title!,
                     style: AppTextStyle.bold14Black
                         .copyWith(color: Theme.of(context).primaryColorDark),
                   ),
-                  Icon(
-                    isFavourite
-                        ? Icons.favorite
-                        : Icons.favorite_border_outlined,
-                    color: AppColor.blue,
+                  InkWell(
+                    onTap: () {
+                      eventsListProvider.updateIsFavourite(
+                          event,
+                          userProvider.currentUser!.id ??
+                              'nullable which is impossible');
+                    },
+                    child: Icon(
+                      event.isFavorite
+                          ? Icons.favorite
+                          : Icons.favorite_border_outlined,
+                      color: AppColor.blue,
+                    ),
                   )
                 ]),
           )

@@ -1,9 +1,12 @@
+import 'package:evently/provider/events_list_provider.dart';
+import 'package:evently/provider/user_provider.dart';
 import 'package:evently/ui/home_screen/tabs/home_tab/event_widget.dart';
 import 'package:evently/ui/home_screen/tabs/home_tab/tab_widget.dart';
 import 'package:evently/utils/app_color.dart';
 import 'package:evently/utils/app_text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:evently/l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
@@ -13,24 +16,32 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-  int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    List<String> categories = [
-      AppLocalizations.of(context)!.all,
-      AppLocalizations.of(context)!.birthday,
-      AppLocalizations.of(context)!.sport,
-      AppLocalizations.of(context)!.meeting,
-      AppLocalizations.of(context)!.gaming,
-      AppLocalizations.of(context)!.eating,
-      AppLocalizations.of(context)!.holiday,
-      AppLocalizations.of(context)!.exhibition,
-      AppLocalizations.of(context)!.workshop,
-      AppLocalizations.of(context)!.book_club,
-    ];
+    var eventsListProvider = Provider.of<EventsListProvider>(context);
+    var userProvider = Provider.of<UserProvider>(context);
+    if (eventsListProvider.eventsList.isEmpty) {
+      // print("build called");
+      eventsListProvider.getAllEvents(
+          userProvider.currentUser!.id ?? 'nullable which is impossible');
+    }
+    eventsListProvider.getCategoriesList(context);
+    // List<String> categories = [
+    //   AppLocalizations.of(context)!.all,
+    //   AppLocalizations.of(context)!.birthday,
+    //   AppLocalizations.of(context)!.sport,
+    //   AppLocalizations.of(context)!.meeting,
+    //   AppLocalizations.of(context)!.gaming,
+    //   AppLocalizations.of(context)!.eating,
+    //   AppLocalizations.of(context)!.holiday,
+    //   AppLocalizations.of(context)!.exhibition,
+    //   AppLocalizations.of(context)!.workshop,
+    //   AppLocalizations.of(context)!.book_club,
+    // ];
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
               bottom: Radius.circular(30),
@@ -51,7 +62,8 @@ class _HomeTabState extends State<HomeTab> {
                         style: AppTextStyle.regular14White,
                       ),
                       Text(
-                        'Mohamed Omar',
+                        userProvider.currentUser!.name ??
+                            'Nullable User which is impossible',
                         style: AppTextStyle.bold24White,
                       ),
                     ],
@@ -83,11 +95,13 @@ class _HomeTabState extends State<HomeTab> {
               ),
               SizedBox(height: 12),
               DefaultTabController(
-                length: categories.length,
+                length: eventsListProvider.categories.length,
                 child: TabBar(
                   onTap: (value) {
-                    selectedIndex = value;
-                    setState(() {});
+                    eventsListProvider.changeSelectedIndex(
+                        value,
+                        userProvider.currentUser!.id ??
+                            'nullable which is impossible');
                   },
                   padding: EdgeInsets.all(0),
                   labelPadding: EdgeInsets.all(5),
@@ -98,14 +112,14 @@ class _HomeTabState extends State<HomeTab> {
                   indicatorColor: AppColor.transparent,
                   dividerColor: AppColor.transparent,
                   isScrollable: true,
-                  tabs: categories.map((categoryName) {
+                  tabs: eventsListProvider.categories.map((categoryName) {
                     return TabWidget(
                         selectedBackgroundColor:
                             Theme.of(context).indicatorColor,
                         unSelectedBackgroundColor: AppColor.transparent,
                         borderColor: Theme.of(context).indicatorColor,
-                        isSelected:
-                            selectedIndex == categories.indexOf(categoryName),
+                        isSelected: eventsListProvider.selectedIndex ==
+                            eventsListProvider.categories.indexOf(categoryName),
                         tabTitle: categoryName);
                   }).toList(),
                 ),
@@ -113,13 +127,17 @@ class _HomeTabState extends State<HomeTab> {
             ],
           ),
         ),
-        body: ListView.builder(
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            return EventWidget(
-              isFavourite: false,
-            );
-          },
-        ));
+        body: eventsListProvider.filteredList.isEmpty
+            ? Center(
+                child: Text('No Events'),
+              )
+            : ListView.builder(
+                itemCount: eventsListProvider.filteredList.length,
+                itemBuilder: (context, index) {
+                  return EventWidget(
+                    event: eventsListProvider.filteredList[index],
+                  );
+                },
+              ));
   }
 }

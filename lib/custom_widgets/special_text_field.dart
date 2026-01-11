@@ -2,6 +2,8 @@ import 'package:evently/utils/app_color.dart';
 import 'package:evently/utils/app_text_style.dart';
 import 'package:flutter/material.dart';
 
+typedef Validator = String? Function(String?)?;
+
 class SpecialTextField extends StatelessWidget {
   final Color borderColor;
   final Color iconColor;
@@ -10,7 +12,11 @@ class SpecialTextField extends StatelessWidget {
   final String? labelText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
-  final int maxLines;
+  final int? maxLines;
+  final bool obscureText;
+  final Validator validator;
+  final TextEditingController? controller;
+  final TextInputType keyboardType;
   const SpecialTextField(
       {super.key,
       this.borderColor = AppColor.grey,
@@ -20,7 +26,11 @@ class SpecialTextField extends StatelessWidget {
       this.suffixIcon,
       this.iconColor = AppColor.grey,
       this.textColor = AppColor.grey,
-      this.maxLines = 1});
+      this.maxLines,
+      this.obscureText = false,
+      this.validator,
+      this.controller,
+      this.keyboardType = TextInputType.text});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +38,12 @@ class SpecialTextField extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: TextFormField(
-        keyboardType: TextInputType.multiline,
-        maxLines: maxLines,
+        validator: validator,
+        controller: controller,
+        keyboardType: keyboardType,
+        maxLines: maxLines ?? 1,
+        obscureText: obscureText,
+        obscuringCharacter: '*',
         decoration: InputDecoration(
           prefixIcon: prefixIcon,
           prefixIconColor: iconColor,
