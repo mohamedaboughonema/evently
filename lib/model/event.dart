@@ -10,6 +10,9 @@ class Event {
   String? time;
   bool isFavorite;
   int? index;
+  double? latitude;
+  double? longitude;
+  String? locationName;
 
   Event({
     this.id = '',
@@ -22,6 +25,9 @@ class Event {
     required this.time,
     this.isFavorite = false,
     this.index = 0,
+    required this.latitude,
+    required this.longitude,
+    required this.locationName,
   });
 
   Event.fromFireStore(Map<String, dynamic>? data)
@@ -36,6 +42,9 @@ class Event {
           date: DateTime.fromMillisecondsSinceEpoch(data['date']),
           time: data['time'],
           index: data['index'],
+          latitude: data['latitude'],
+          longitude: data['longitude'],
+          locationName: data['locationName'],
         );
 
   Map<String, dynamic> toFirestore() {
@@ -50,6 +59,9 @@ class Event {
       'date': date!.millisecondsSinceEpoch,
       'time': time,
       'index': index,
+      'latitude': latitude,
+      'longitude': longitude,
+      'locationName': locationName,
     };
   }
 }

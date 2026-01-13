@@ -1,4 +1,5 @@
 import 'package:evently/custom_widgets/custom_alert_dialoge.dart';
+import 'package:evently/custom_widgets/selection_widget.dart';
 import 'package:evently/custom_widgets/special_elevated_button.dart';
 import 'package:evently/custom_widgets/special_text_button.dart';
 import 'package:evently/custom_widgets/special_text_field.dart';
@@ -144,20 +145,9 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 children: [
                   Spacer(),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppColor.primaryBlue, width: 2),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(AssetsManager.america),
-                        SizedBox(width: 8),
-                        Image.asset(AssetsManager.egypt),
-                      ],
-                    ),
-                  ),
+                  SelectionWidget(
+                      widget1: Image.asset(AssetsManager.america),
+                      widget2: Image.asset(AssetsManager.egypt)),
                   Spacer()
                 ],
               ),

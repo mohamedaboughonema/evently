@@ -7,7 +7,7 @@ typedef Validator = String? Function(String?)?;
 class SpecialTextField extends StatelessWidget {
   final Color borderColor;
   final Color iconColor;
-  final Color textColor;
+  final Color? textColor;
   final String? hintText;
   final String? labelText;
   final Widget? prefixIcon;
@@ -25,7 +25,7 @@ class SpecialTextField extends StatelessWidget {
       this.prefixIcon,
       this.suffixIcon,
       this.iconColor = AppColor.grey,
-      this.textColor = AppColor.grey,
+      this.textColor,
       this.maxLines,
       this.obscureText = false,
       this.validator,
@@ -44,15 +44,19 @@ class SpecialTextField extends StatelessWidget {
         maxLines: maxLines ?? 1,
         obscureText: obscureText,
         obscuringCharacter: '*',
+        style: AppTextStyle.medium14White
+            .copyWith(color: textColor ?? Theme.of(context).hintColor),
         decoration: InputDecoration(
           prefixIcon: prefixIcon,
           prefixIconColor: iconColor,
           suffixIcon: suffixIcon,
           suffixIconColor: iconColor,
           hintText: hintText,
-          hintStyle: AppTextStyle.medium14White.copyWith(color: textColor),
+          hintStyle: AppTextStyle.medium14White
+              .copyWith(color: textColor ?? Theme.of(context).hintColor),
           labelText: labelText,
-          labelStyle: AppTextStyle.bold14Primary.copyWith(color: textColor),
+          labelStyle: AppTextStyle.bold14Primary
+              .copyWith(color: textColor ?? Theme.of(context).hintColor),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
               borderSide: BorderSide(color: borderColor, width: 1)),

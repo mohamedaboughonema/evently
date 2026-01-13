@@ -21,6 +21,7 @@ class AppTheme {
       scaffoldBackgroundColor: AppColor.white,
       primaryColorDark: AppColor.black,
       primaryColorLight: AppColor.grey,
+      hintColor: AppColor.grey,
       appBarTheme: AppBarTheme(
           centerTitle: true,
           titleTextStyle: AppTextStyle.medium20Primary,
@@ -50,6 +51,7 @@ class AppTheme {
       scaffoldBackgroundColor: AppColor.darkBlue,
       primaryColorDark: AppColor.white,
       primaryColorLight: AppColor.primaryBlue,
+      hintColor: AppColor.white,
       appBarTheme: AppBarTheme(
           centerTitle: true,
           titleTextStyle: AppTextStyle.medium20Primary,

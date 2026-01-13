@@ -153,35 +153,40 @@ class _AddEventState extends State<AddEvent> {
                     : selectedTime!.format(context),
               ),
               SpecialLabel(AppLocalizations.of(context)!.location),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColor.primaryBlue, width: 2),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                margin: EdgeInsets.all(16),
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColor.primaryBlue,
-                        borderRadius: BorderRadius.circular(5),
+              InkWell(
+                onTap: () {
+                  // to do : choose location
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColor.primaryBlue, width: 2),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  margin: EdgeInsets.all(16),
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColor.primaryBlue,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        padding: EdgeInsets.all(6),
+                        child: Image.asset(
+                          AssetsManager.iconLocation,
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                        ),
                       ),
-                      padding: EdgeInsets.all(6),
-                      child: Image.asset(
-                        AssetsManager.iconLocation,
-                        color: Theme.of(context).scaffoldBackgroundColor,
+                      SizedBox(
+                        width: 10,
                       ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(AppLocalizations.of(context)!.choose_event_location,
-                        style: AppTextStyle.medium16Primary),
-                    Spacer(),
-                    Icon(Icons.arrow_forward_ios,
-                        color: AppColor.primaryBlue, size: 16)
-                  ],
+                      Text(AppLocalizations.of(context)!.choose_event_location,
+                          style: AppTextStyle.medium16Primary),
+                      Spacer(),
+                      Icon(Icons.arrow_forward_ios,
+                          color: AppColor.primaryBlue, size: 16)
+                    ],
+                  ),
                 ),
               ),
               SpecialElevatedButton(
@@ -206,7 +211,10 @@ class _AddEventState extends State<AddEvent> {
           category: selectedCategory,
           date: selectedDate!,
           time: selectedTime!.format(context),
-          index: selectedIndex);
+          index: selectedIndex,
+          latitude: 0.0,
+          longitude: 0.0,
+          locationName: 'Default Location');
       var userProvider = Provider.of<UserProvider>(context, listen: false);
       FirebaseUtils.addEventToFirestore(event,
               userProvider.currentUser!.id ?? 'nullable which is impossible')

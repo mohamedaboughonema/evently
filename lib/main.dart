@@ -1,4 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:evently/on_boarding_screen/on_boarding_screen.dart';
 import 'package:evently/provider/events_list_provider.dart';
 import 'package:evently/provider/language_provider.dart';
 import 'package:evently/provider/theme_provider.dart';
@@ -53,13 +54,14 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: providerTheme.currentTheme, // ThemeMode.system,
-      initialRoute: LoginScreen.routeName,
+      initialRoute: OnBoardingScreen.routeName,
       routes: {
         HomeScreen.routeName: (context) => const HomeScreen(),
         AddEvent.routeName: (context) => const AddEvent(),
         LoginScreen.routeName: (context) => const LoginScreen(),
         RegisterScreen.routeName: (context) => const RegisterScreen(),
         ForgetPassword.routeName: (context) => const ForgetPassword(),
+        OnBoardingScreen.routeName: (context) => const OnBoardingScreen(),
       },
     );
   }
